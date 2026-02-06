@@ -1,0 +1,16 @@
+# Dependencies
+node_modules/
+
+# Playwright artifacts
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+
+# Auth (ignore unless intentionally shared)
+playwright/.auth/
+
+# OS / Editor
+.DS_Store
+.vscode/
+.env
