@@ -3,7 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test": "playwright test",
+    "shotbuzz": "playwright test tests/shotbuzz.spec.js --workers=1",
+    "smoke": "playwright test tests/smoke",
+    "regression": "playwright test tests/regression"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
