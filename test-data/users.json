@@ -1,6 +1,22 @@
 {
   "adminUser": {
     "email": "admin@gmail.com",
-    "password": "admin@123"
+    "password": "admin@123",
+    "role": "Admin"
+  },
+  "headUser": {
+    "email": "travishead@gmail.com",
+    "password": "admin@123",
+    "role": "Head"
+  },
+  "supervisorUser": {
+    "email": "mitchel@gmail.com",
+    "password": "admin@123",
+    "role": "Supervisor"
+  },
+  "tlUser": {
+    "email": "vidya@gmail.com",
+    "password": "admin@123",
+    "role": "Team Lead"
   }
 }

@@ -1,7 +1,9 @@
-// @ts-check
 import { defineConfig, devices } from '@playwright/test';
 
-
+// Generate timestamp for unique report folders
+const now = new Date();
+const timestamp = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}_` +
+                  `${now.getHours().toString().padStart(2, '0')}-${now.getMinutes().toString().padStart(2, '0')}-${now.getSeconds().toString().padStart(2, '0')}`;
 
 /**
  * @see https://playwright.dev/docs/test-configuration
@@ -16,8 +18,11 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
-  /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: 'html',
+  /* Reporter to use with timestamped folder */
+  reporter: [
+    ['html', { outputFolder: `playwright-reports/report_${timestamp}`, open: 'never' }],
+    ['list'] // Also keep console output visible
+  ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('')`. */

@@ -34,7 +34,7 @@ class ApiHelper {
             throw new Error(`Failed to create shot. Status: ${status}, Response: ${JSON.stringify(responseJson)}`);
         }
 
-        return responseJson;
+        return { ...responseJson, name: dynamicName };
     }
 }
 

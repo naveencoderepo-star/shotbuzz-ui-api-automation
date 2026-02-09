@@ -1,10 +1,9 @@
 class LoginPage {
     constructor(page) {
         this.page = page;
-        this.emailInput = page.locator('#email');
-        this.passwordInput = page.locator('#password');
-        // Placeholder for login button, assuming generic submit for now or user to provide
-        this.loginButton = page.locator('button[type="submit"]'); 
+        this.emailInput = page.getByPlaceholder('Enter your email');
+        this.passwordInput = page.getByPlaceholder('Enter password');
+        this.loginButton = page.getByRole('button', { name: 'Sign in' });
     }
 
     async getTitle() {
