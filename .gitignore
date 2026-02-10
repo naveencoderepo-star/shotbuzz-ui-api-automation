@@ -4,8 +4,10 @@ node_modules/
 # Playwright artifacts
 test-results/
 playwright-report/
+playwright-reports/
 blob-report/
 playwright/.cache/
+test_output.txt
 
 # Auth (ignore unless intentionally shared)
 playwright/.auth/

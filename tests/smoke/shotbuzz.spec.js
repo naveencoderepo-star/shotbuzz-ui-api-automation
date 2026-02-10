@@ -1,8 +1,8 @@
 const { test, expect } = require('@playwright/test');
-const { PageObjectManager } = require('../pages/PageObjectManager');
-const { ApiHelper } = require('../utils/apiHelper');
-const { ShotData } = require('../test-data/shotData');
-const testData = require('../test-data/users.json');
+const { PageObjectManager } = require('../../pages/PageObjectManager');
+const { ApiHelper } = require('../../utils/apiHelper');
+const { ShotData } = require('../../test-data/shotData');
+const testData = require('../../test-data/users.json');
 
 test.describe.serial('ShotBuzz Portal API & UI Integration', () => {
     let pom; // Page Object Manager
