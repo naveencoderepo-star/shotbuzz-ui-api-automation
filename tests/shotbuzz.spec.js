@@ -15,7 +15,7 @@ test.describe.serial('ShotBuzz Portal API & UI Integration', () => {
         apiHelper = new ApiHelper(request);
         
         // Navigate to shots page
-        await pom.getShotsPage().navigate();
+        await pom.getAdminShotPage().navigate();
     });
 
     test('Verify Login, Token Capture and Dynamic Shot Creation', async ({ page }) => {
@@ -44,12 +44,12 @@ test.describe.serial('ShotBuzz Portal API & UI Integration', () => {
 
         await test.step('3. UI - Navigate to Shots Dashboard', async () => {
             await pom.getEmployeesPage().verifyIsLoaded();
-            await pom.getShotsPage().navigateToShotsDashboard();
+            await pom.getAdminShotPage().navigateToShotsDashboard();
         });
 
         await test.step('4. UI - Verify Created Shot in Table', async () => {
-            const shotRow = await pom.getShotsPage().verifyShotVisible(newShotResponse.name);
-            await pom.getShotsPage().verifyShotRowDetails(shotRow, {
+            const shotRow = await pom.getAdminShotPage().verifyShotVisible(newShotResponse.name);
+            await pom.getAdminShotPage().verifyShotRowDetails(shotRow, {
                 type: 'NEW',
                 status: 'YTA',
                 hod: 'TravisHead',
@@ -60,9 +60,9 @@ test.describe.serial('ShotBuzz Portal API & UI Integration', () => {
         });
 
         await test.step('5. UI - Interact with Menu and Status Dropdown', async () => {
-            await pom.getShotsPage().openShotMenu(newShotResponse.name);
-            await pom.getShotsPage().clickChangeStatus();
-            await pom.getShotsPage().clickSelectStatusDropdown();
+            await pom.getAdminShotPage().openShotMenu(newShotResponse.name);
+            await pom.getAdminShotPage().clickChangeStatus();
+            await pom.getAdminShotPage().clickSelectStatusDropdown();
             console.log("[PASS] Successfully interacted with Action Menu and Status Trigger.");
         });
     });
@@ -77,34 +77,32 @@ test.describe.serial('ShotBuzz Portal API & UI Integration', () => {
         });
 
         await test.step('2. Navigate to Shots Dashboard', async () => {
-            // Wait for any dashboard page to load (Admin lands on employees, Head lands on mandayAvailability)
-            await expect(pom.getShotsPage().shotDashboardBtn).toBeVisible();
-            await pom.getShotsPage().navigateToShotsDashboard();
+            await expect(pom.getHeadShotPage().shotDashboardBtn).toBeVisible();
+            await pom.getHeadShotPage().navigateToShotsDashboard();
         });
 
         await test.step('3. Verify Created Shot is Visible for Head User', async () => {
-            await pom.getShotsPage().verifyShotVisible(createdShotName);
+            await pom.getHeadShotPage().verifyShotVisible(createdShotName);
             console.log(`[PASS] Shot '${createdShotName}' is visible in Head Portal.`);
         });
 
         await test.step('4. Verify Shot Popup and Restricted Status Dropdown', async () => {
-            await pom.getShotsPage().clickShotRow(createdShotName);
-            await pom.getShotsPage().verifyPopupLoaded(createdShotName);
-            await pom.getShotsPage().verifyPopupStatus('YTA');
-            await pom.getShotsPage().verifyStatusDropdownLocked();
+            await pom.getHeadShotPage().clickShotRow(createdShotName);
+            await pom.getHeadShotPage().verifyPopupLoaded(createdShotName);
+            await pom.getHeadShotPage().verifyPopupStatus('YTA');
+            await pom.getHeadShotPage().verifyStatusDropdownLocked();
             console.log(`[PASS] Shot popup verified for '${createdShotName}' with restricted status dropdown.`);
         });
 
         await test.step('5. Assign Supervisor and Verify ATS Status', async () => {
-            await pom.getShotsPage().goToTeamTab();
-            await pom.getShotsPage().clickEditRoles();
-            await pom.getShotsPage().assignSupervisor('Mitchel John');
-            // await pom.getShotsPage().assignTL('Mitchel John');
-            await pom.getShotsPage().clickUpdateRoles();
+            await pom.getHeadShotPage().goToTeamTab();
+            await pom.getHeadShotPage().clickEditRoles();
+            await pom.getHeadShotPage().assignSupervisor('Mitchel John');
+            await pom.getHeadShotPage().clickUpdateRoles();
 
-            await page.waitForTimeout(5000); // Wait for changes to be reflected
-            await pom.getShotsPage().verifyStatusChangedToATS();
-            await pom.getShotsPage().verifySupervisorAssigned('Mitchel John');
+            await page.waitForTimeout(5000);
+            await pom.getHeadShotPage().verifyStatusChangedToATS();
+            await pom.getHeadShotPage().verifySupervisorAssigned('Mitchel John');
             console.log("[PASS] Successfully assigned Supervisor and verified ATS status update.");
         });
     });
@@ -119,12 +117,12 @@ test.describe.serial('ShotBuzz Portal API & UI Integration', () => {
 
         await test.step('2. Navigate to Shots Dashboard', async () => {
             await pom.getEmployeesPage().verifyIsLoaded();
-            await pom.getShotsPage().navigateToShotsDashboard();
+            await pom.getAdminShotPage().navigateToShotsDashboard();
         });
 
         await test.step('3. Verify Status is ATS for the Shot', async () => {
-            const shotRow = await pom.getShotsPage().verifyShotVisible(createdShotName);
-            await pom.getShotsPage().verifyShotRowDetails(shotRow, {
+            const shotRow = await pom.getAdminShotPage().verifyShotVisible(createdShotName);
+            await pom.getAdminShotPage().verifyShotRowDetails(shotRow, {
                 status: 'ATS'
             });
             console.log(`[PASS] Shot '${createdShotName}' status verified as ATS in Admin Portal.`);
@@ -140,29 +138,28 @@ test.describe.serial('ShotBuzz Portal API & UI Integration', () => {
         });
 
         await test.step('2. Navigate to Dashboard and Open Shot', async () => {
-            // Supervisors might land directly on a dashboard. Check if shot is already visible or click 'Shots'
             const isShotVisible = await page.getByText(createdShotName).isVisible();
             if (!isShotVisible) {
-                await expect(pom.getShotsPage().supervisorShotDashboardBtn).toBeVisible();
-                await pom.getShotsPage().supervisorShotDashboardBtn.click();
-                await pom.getShotsPage().verifyShotsDashboardLoaded();
+                await expect(pom.getSupervisorShotPage().supervisorShotDashboardBtn).toBeVisible();
+                await pom.getSupervisorShotPage().supervisorShotDashboardBtn.click();
+                await pom.getSupervisorShotPage().verifyShotsDashboardLoaded();
             }
-            await pom.getShotsPage().verifyShotVisible(createdShotName);
-            await pom.getShotsPage().clickShotRow(createdShotName);
-            await pom.getShotsPage().verifyPopupLoaded(createdShotName);
+            await pom.getSupervisorShotPage().verifyShotVisible(createdShotName);
+            await pom.getSupervisorShotPage().clickShotRow(createdShotName);
+            await pom.getSupervisorShotPage().verifyPopupLoaded(createdShotName);
         });
 
         await test.step('3. Verify Status is ATS', async () => {
-            await pom.getShotsPage().verifyPopupStatus('ATS');
+            await pom.getSupervisorShotPage().verifyPopupStatus('ATS');
             console.log("[PASS] Initial status in Supervisor portal is ATS.");
         });
 
         await test.step('4. Assign TL and Verify ATL Status', async () => {
-            await pom.getShotsPage().goToTeamTab();
-            await pom.getShotsPage().clickEditRoles();
-            await pom.getShotsPage().assignTL('Vidya Shree');
-            await pom.getShotsPage().clickUpdateRoles();
-            await pom.getShotsPage().verifyStatusChangedToATL();
+            await pom.getSupervisorShotPage().goToTeamTab();
+            await pom.getSupervisorShotPage().clickEditRoles();
+            await pom.getSupervisorShotPage().assignTL('Vidya Shree');
+            await pom.getSupervisorShotPage().clickUpdateRoles();
+            await pom.getSupervisorShotPage().verifyStatusChangedToATL();
             console.log("[PASS] Successfully assigned TL and verified ATL status update.");
         });
     });
@@ -176,20 +173,20 @@ test.describe.serial('ShotBuzz Portal API & UI Integration', () => {
         });
 
         await test.step('2. Open Shot Directly', async () => {
-            await pom.getShotsPage().verifyShotVisible(createdShotName);
-            await pom.getShotsPage().clickShotRow(createdShotName);
-            await pom.getShotsPage().verifyPopupLoaded(createdShotName);
+            await pom.getTLShotPage().verifyShotVisible(createdShotName);
+            await pom.getTLShotPage().clickShotRow(createdShotName);
+            await pom.getTLShotPage().verifyPopupLoaded(createdShotName);
             console.log(`[PASS] Shot '${createdShotName}' opened successfully.`);
         });
 
         await test.step('3. Verify Status is ATL', async () => {
-            await pom.getShotsPage().verifyPopupStatus('ATL');
+            await pom.getTLShotPage().verifyPopupStatus('ATL');
             console.log(`[PASS] Shot '${createdShotName}' status verified as ATL in TL Portal.`);
         });
 
         await test.step('4. Verify TL Assignment', async () => {
-            await pom.getShotsPage().goToTeamTab();
-            await pom.getShotsPage().verifyTLAssigned('Vidya Shree');
+            await pom.getTLShotPage().goToTeamTab();
+            await pom.getTLShotPage().verifyTLAssigned('Vidya Shree');
             console.log("[PASS] TL assignment verified in TL Portal.");
         });
     });
